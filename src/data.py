@@ -36,6 +36,12 @@ class ImageData(object):
         o_contour_files = [path.replace("\\","/") for path in o_contour_files]
 
         # build set of labeled images => not all images are labeled #TODO
+        self.labeled_images = set()
+        for i_contour_files in i_contour_files:
+            if i_contour_files[:8] not in self.labeled_images:
+                self.labeled_images.add(i_contour_files[:8])
+        
+
 
     def load_masks(self):
         return self
