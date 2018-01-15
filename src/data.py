@@ -10,7 +10,15 @@ class ImageData(object):
         search = os.path.join(dir, "P*list.txt")
         search_results = glob.glob(search)
         self.contour_files = search_results[0]
-        self.load_patient_images()
+
+        self.images = []
+        self.dicoms = []
+        self.endo_contours = []
+        self.epi_contours = []
+        self.endo_masks = []
+        self.epi_masks = []
+
+        self.images, self.dicoms = self.load_patient_images()
         self.load_patient_masks()
         self.width = 256
         self.height = 216
@@ -55,10 +63,7 @@ class ImageData(object):
             if i_contour_files[:8] not in self.labeled_images:
                 self.labeled_images.add(i_contour_files[:8])
         
-        self.endo_contours = []
-        self.epi_contours = []
-        self.endo_masks = []
-        self.epi_masks = []
+        
 
         for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
             i_x, i_y = self.read_contour_files(i_contour_file)
