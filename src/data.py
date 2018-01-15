@@ -2,10 +2,9 @@ import os, glob, re
 import numpy as np
 import dicom
 
-
 class ImageData(object):
     def __init__(self, dir):
-        self.dir = dir
+        self.dir = os.path.normpath(dir) # normalize path from "\" to "/" to match file structure
         search = os.path.join(dir, "P*list.txt")
         search_results = glob.glob(search)
         self.contour_files = search_results[0]
@@ -30,6 +29,8 @@ class ImageData(object):
             will convert the image to a binary image. The area outlined
             by the contours will be white and the background will 
             be black.
+
+            Based on the Matlab evaluation code provided with dataset.
         '''
         # read the paths of contur text files into list
         with open(self.contour_files) as f:
@@ -54,23 +55,21 @@ class ImageData(object):
         self.epi_masks = []
 
         for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
-            
+            i_x, i_y = self.read_contour_files(i_contour_file)
+            o_x, o_y = self.read_contour_files(o_contour_file)
+            self.endo_contours.append((i_x,i_y))
+            self.epi_contours.append((o_x,o_y))
 
 
-    def load_patient_contours(self):
 
+
+
+    def read_contour_files(self,path):
+
+        x,y= np.loadtxt(path).T
+        return x, y
     def load_masks(self):
         return self
 
 
-def load_images(dir):
-    patient_dirs_path = os.path.join(dir, "patient*")
-    
-    images = []
-    dicoms = []
-    epi_contours = []
-    endo_contours = []
-    for patient_image_dir in patient_dirs_path:
-        imd = ImageData(patient_image_dir)
-        images, dicoms = imd.load_patient_images()
-    return images
+
