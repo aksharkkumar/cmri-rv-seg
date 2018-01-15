@@ -24,7 +24,6 @@ class ImageData(object):
         self.height = 216
     
     def load_patient_images(self):
-        #TODO rotate images that are different dim
         dcm_path = os.path.join(self.dir, "*dicom/*.dcm")
         dcms = glob.glob(dcm_path)
         images = []
