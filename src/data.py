@@ -24,6 +24,13 @@ class ImageData(object):
         return images, dicoms
 
     def load_patient_masks(self):
+        '''
+            We are given the contours as [X,Y] pixel pairs. However to
+            compare the two areas we need to determine a "mask" that 
+            will convert the image to a binary image. The area outlined
+            by the contours will be white and the background will 
+            be black.
+        '''
         # read the paths of contur text files into list
         with open(self.contour_files) as f:
             files = f.readlines()
@@ -41,8 +48,16 @@ class ImageData(object):
             if i_contour_files[:8] not in self.labeled_images:
                 self.labeled_images.add(i_contour_files[:8])
         
+        self.endo_contours = []
+        self.epi_contours = []
+        self.endo_masks = []
+        self.epi_masks = []
+
+        for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
+            
 
 
+    def load_patient_contours(self):
 
     def load_masks(self):
         return self
