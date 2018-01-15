@@ -9,15 +9,19 @@ class ImageData(object):
         search_results = glob.glob(search)
         self.contour_files = search_results[0]
         self.load_patient_images()
-        self.load_masks()
+        self.load_patient_masks()
+        self.width = 256
+        self.height = 216
     
     def load_patient_images(self):
+        #TODO rotate images that are different dim
         dcm_path = os.path.join(self.dir, "*dicom/*.dcm")
         dcms = glob.glob(dcm_path)
         images = []
         dicoms = []
         for dcm in dcms:
             ds = dicom.read_file(dcm)
+            img = self.rotate_image(ds.pixel_array)
             images.append(ds.pixel_array)
             dicoms.append(ds)
         return images, dicoms
@@ -59,17 +63,26 @@ class ImageData(object):
             o_x, o_y = self.read_contour_files(o_contour_file)
             self.endo_contours.append((i_x,i_y))
             self.epi_contours.append((o_x,o_y))
+            self.endo_masks.append(self.create_masks(i_x, i_y))
+            self.epi_masks.append(self.create_masks(o_x, o_y))
 
 
 
 
 
     def read_contour_files(self,path):
-
-        x,y= np.loadtxt(path).T
+        path = os.path.join(self.dir, path)
+        x, y= np.loadtxt(path).T
         return x, y
-    def load_masks(self):
+    def create_masks(self, x, y):
+
         return self
+    def rotate_image(self, image):
+        img_height, img_width = image.shape()
+        if img_width < img_height:
+            return np.rot90(image)
+        else:
+            return image
 
 
 
