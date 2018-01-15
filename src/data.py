@@ -2,6 +2,8 @@ import os, glob, re
 import numpy as np
 import dicom
 
+from PIL import Image, ImageDraw
+
 class ImageData(object):
     def __init__(self, dir):
         self.dir = os.path.normpath(dir) # normalize path from "\" to "/" to match file structure
@@ -75,7 +77,7 @@ class ImageData(object):
         x, y= np.loadtxt(path).T
         return x, y
     def create_masks(self, x, y):
-
+        
         return self
     def rotate_image(self, image):
         img_height, img_width = image.shape()
