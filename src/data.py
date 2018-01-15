@@ -70,15 +70,17 @@ class ImageData(object):
 
 
 
-
-
     def read_contour_files(self,path):
         path = os.path.join(self.dir, path)
         x, y= np.loadtxt(path).T
         return x, y
+
     def create_masks(self, x, y):
-        
-        return self
+        image = Image.new("L", (self.width,self.height))
+        polygon = list(zip(x,y))
+        ImageDraw.Draw(image).polygon(polygon,fill="white",outline="white")
+        return 255 * np.array(image)
+
     def rotate_image(self, image):
         img_height, img_width = image.shape()
         if img_width < img_height:
