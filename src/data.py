@@ -18,6 +18,7 @@ class ImageData(object):
         self.endo_masks = []
         self.epi_masks = []
 
+        self.rotated = False
         self.images, self.dicoms = self.load_patient_images()
         self.load_patient_masks()
         self.width = 256
@@ -76,7 +77,9 @@ class ImageData(object):
 
     def read_contour_files(self,path):
         path = os.path.join(self.dir, path)
-        x, y= np.loadtxt(path).T
+        x, y = np.loadtxt(path).T
+        if self.rotated:
+            x, y = y, self.height - x
         return x, y
 
     def create_masks(self, x, y):
@@ -86,8 +89,9 @@ class ImageData(object):
         return 255 * np.array(image)
 
     def rotate_image(self, image):
-        img_height, img_width = image.shape()
+        img_height, img_width = image.shape
         if img_width < img_height:
+            self.rotated = True
             return np.rot90(image)
         else:
             return image
