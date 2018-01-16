@@ -21,9 +21,10 @@ class UNet(object):
             Conv 3x3 with ReLU
 
             Upsampling : repeat upsample 4 times
-                1. Conv 3x3 n filters with ReLU
+                1. Up-conv 2x2
                 2. Conv 3x3 n filters with ReLU
-                3. Up-conv 2x2
+                3. Conv 3x3 n filters with ReLU
+                
 
             Conv 1x1 => output segmentation map
         '''
@@ -59,6 +60,11 @@ class UNet(object):
 
 
     def crop(self,layer,conv_copy):
+        '''
+            Function used to crop the copy of the downsampling layer for use with
+            each corresponding upsampling layer. Cropping is necessary because 
+            padding was not used when downsampling, so image size has changed.
+        '''
         _,layer_height,layer_width = K.int_shape(layer)
         _,cc_height,cc_width = K.int_shape(conv_copy)
 
