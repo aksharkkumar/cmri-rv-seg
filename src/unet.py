@@ -30,7 +30,7 @@ class UNet(object):
         '''
         layer = Input((self.height,self.width,1))
         copies = []
-
+        # downsampling block
         for i in range(steps):
             layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
             layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
@@ -41,7 +41,7 @@ class UNet(object):
         layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
         layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
 
-        #TODO implement upsampling portion
+        # upsampling block
         for i in reversed(range(steps)):
             features //= 2
             layer = Conv2DTranspose(filters=features,kernel_size=2,strides=2)(layer)
