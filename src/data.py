@@ -17,12 +17,16 @@ class ImageData(object):
         self.epi_contours = []
         self.endo_masks = []
         self.epi_masks = []
-
-        self.rotated = False
-        self.images, self.dicoms = self.load_patient_images()
-        self.load_patient_masks()
         self.width = 256
         self.height = 216
+        self.rotated = False
+        # load contours first, so we can build a set of labeled images 
+        # => then grab only those patient images
+        self.load_patient_masks()
+
+        self.images, self.dicoms = self.load_patient_images()
+        
+        
     
     def load_patient_images(self):
         dcm_path = os.path.join(self.dir, "*dicom/*.dcm")
@@ -30,10 +34,16 @@ class ImageData(object):
         images = []
         dicoms = []
         for dcm in dcms:
-            ds = dicom.read_file(dcm)
-            img = self.rotate_image(ds.pixel_array)
-            images.append(ds.pixel_array)
-            dicoms.append(ds)
+            # print(dcm)
+            match = re.search(".*(........).dcm",dcm)
+            dcm_key = match.group(1)
+            # print(dcm_key)
+            if dcm_key in self.labeled_images:
+                # print(dcm_key)
+                ds = dicom.read_file(dcm)
+                img = self.rotate_image(ds.pixel_array)
+                images.append(ds.pixel_array)
+                dicoms.append(ds)
         return images, dicoms
 
     def load_patient_masks(self):
@@ -47,7 +57,7 @@ class ImageData(object):
             Based on the Matlab evaluation code provided with dataset.
         '''
         # read the paths of contur text files into list
-        with open(self.contour_files) as f:
+        with open(self.contour_files, 'r') as f:
             files = f.readlines()
         files = [x.strip() for x in files] # need to remove \n from end of lines as they are paths
         
@@ -57,15 +67,20 @@ class ImageData(object):
         i_contour_files = [path.replace("\\","/") for path in i_contour_files]
         o_contour_files = [path.replace("\\","/") for path in o_contour_files]
 
-        # build set of labeled images => not all images are labeled
+        
+        
+        # for i_contour_file in i_contour_files:
+        #     match = re.search("patient../(........)-.contour", i_contour_file)
+        #     img_label = match.group(1)
+        #     self.labeled_images.add(img_label)
+        
+        
         self.labeled_images = set()
-        for i_contour_files in i_contour_files:
-            if i_contour_files[:8] not in self.labeled_images:
-                self.labeled_images.add(i_contour_files[:8])
-        
-        
-
         for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
+            # build set of labeled images => not all images are labeled
+            match = re.search(".*(........)-.contour",i_contour_file)
+            img_label = match.group(1)
+            self.labeled_images.add(img_label)
             i_x, i_y = self.read_contour_files(i_contour_file)
             o_x, o_y = self.read_contour_files(o_contour_file)
             self.endo_contours.append((i_x,i_y))
@@ -75,8 +90,10 @@ class ImageData(object):
 
 
 
-    def read_contour_files(self,path):
-        path = os.path.join(self.dir, path)
+    def read_contour_files(self,filepath):
+        match = re.search("patient../(.*)", filepath)
+        path = os.path.join(self.dir, match.group(1))
+        # print(path)
         x, y = np.loadtxt(path).T
         if self.rotated:
             x, y = y, self.height - x
@@ -95,6 +112,4 @@ class ImageData(object):
             return np.rot90(image)
         else:
             return image
-
-
 
