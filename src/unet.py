@@ -7,7 +7,7 @@ from keras import backend as K
 
 class UNet(object):
 
-    def get_unet(self, height, width, channels, features=64, steps=4):
+    def get_unet(self, height, width, channels, features=64, steps=4,padding='same'):
         '''
             Creates the UNet conv model. 
             Downsampling : repeat downsample 4 times
@@ -31,14 +31,14 @@ class UNet(object):
         copies = []
         # downsampling block
         for i in range(steps):
-            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
-            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
+            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
+            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
             layer = MaxPooling2D(pool_size=(2, 2))(layer)
             copies.append(layer)
             features *= 2
 
-        layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
-        layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
+        layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
+        layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
 
         # upsampling block
         for i in reversed(range(steps)):
@@ -47,8 +47,8 @@ class UNet(object):
             crop_copy = self.crop(layer,copies[i])
             layer = Concatenate()( [layer, crop_copy] )
 
-            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
-            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
+            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
+            layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
 
         
         outputs = Conv2D(filters=2,kernel_size=1,activation='softmax')(layer)
