@@ -1,15 +1,13 @@
 import numpy as np
 from keras.layers import Input, Conv2D, Conv2DTranspose, Cropping2D, MaxPooling2D, GlobalAveragePooling2D
-from keras.layers import Dropout, Flatten, Dense
+from keras.layers import Dropout, Flatten, Dense, Concatenate
 from keras.models import Model
 from keras import backend as K
 
 
 class UNet(object):
-    def __init__(self,image):
-        self.height,self.width = image.shape
 
-    def unet(self, input, features=64, steps=4):
+    def get_unet(self, height, width, channels, features=64, steps=4):
         '''
             Creates the UNet conv model. 
             Downsampling : repeat downsample 4 times
@@ -28,7 +26,8 @@ class UNet(object):
 
             Conv 1x1 => output segmentation map
         '''
-        layer = Input((self.height,self.width,1))
+        layer = Input(shape=(height,width,channels))
+        inputs = layer
         copies = []
         # downsampling block
         for i in range(steps):
@@ -46,7 +45,7 @@ class UNet(object):
             features //= 2
             layer = Conv2DTranspose(filters=features,kernel_size=2,strides=2)(layer)
             crop_copy = self.crop(layer,copies[i])
-            layer.Concatenate()( [layer, crop_copy] )
+            layer = Concatenate()( [layer, crop_copy] )
 
             layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
             layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding='valid')(layer)
@@ -65,8 +64,8 @@ class UNet(object):
             each corresponding upsampling layer. Cropping is necessary because 
             padding was not used when downsampling, so image size has changed.
         '''
-        _,layer_height,layer_width = K.int_shape(layer)
-        _,cc_height,cc_width = K.int_shape(conv_copy)
+        _, layer_height, layer_width, _ = K.int_shape(layer)
+        _, cc_height, cc_width, _ = K.int_shape(conv_copy)
 
         crop_height = cc_height - layer_height
         crop_width = cc_width - layer_width
@@ -75,8 +74,8 @@ class UNet(object):
         if crop_height == 0 and crop_width == 0:
             copy = layer
         else :
-            cropping = ((crop_height // 2, crop_height - crop_height//2), (crop_width, crop_width - crop_width//2))
-            copy = Cropping2D(cropping=cropping)(layer)
+            cropping = ((crop_height // 2, crop_height - crop_height//2), (crop_width // 2, crop_width - crop_width//2))
+            copy = Cropping2D(cropping=cropping)(conv_copy)
 
         return copy
         
