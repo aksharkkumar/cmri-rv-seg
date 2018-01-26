@@ -33,8 +33,9 @@ class UNet(object):
         for i in range(steps):
             layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
             layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
-            layer = MaxPooling2D(pool_size=(2, 2))(layer)
             copies.append(layer)
+            layer = MaxPooling2D(pool_size=(2, 2))(layer)
+            
             features *= 2
 
         layer = Conv2D(filters=features,kernel_size=3,activation='relu',padding=padding)(layer)
