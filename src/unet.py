@@ -79,4 +79,9 @@ class UNet(object):
             copy = Cropping2D(cropping=cropping)(conv_copy)
 
         return copy
-        
+    
+    def dice_coef(y_true, y_preds):
+        flat_y_true = K.flatten(y_true)
+        flat_y_preds = K.flatten(y_preds)
+        intersection = K.sum(flat_y_true*flat_y_preds)
+        return (2. * intersection) / (K.sum(flat_y_true)+K.sum(flat_y_preds))
