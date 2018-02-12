@@ -23,4 +23,11 @@ The solution we will implement is a convolutional neural network based on the U-
 
 ### Metrics
 
+For evaluating our model, we used the Dice coefficient. The Dice coefficient is a measure of the overlap between two contours. The coefficient varies from 0 to 1, with a value of 0 indicating no overlap between two contours. Meanwhile, a value of 1 indicates a perfect overlap between two contours. We compared our automated contours to a manual contour performed by an expert physician using the following equation: 
+
+D(A,M) = 2*((AnM)/(A+M))
+
+as desribed by [REF2]. Where D represents the Dice coefficient, A represents the area of the automated contour, and M represents the area of the manual contour performed by the expert. 
+
+
 
