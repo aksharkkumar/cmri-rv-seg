@@ -14,5 +14,13 @@ Segmentation of the right ventricle (RV) in patients is a crucial step in diagno
 
 Because of these difficulties, the process is prone to intra- and inter-observer variability [REF1]. The purpose of this project was to simplify these complex pain points and provide a method to automatically segment the RV in cardiac MRI images. Such an automated method would decrease segmentation time and improve consistency of results between physicians. The automated model would then assist the physician in making better diagnoses for the patient.
 
+The dataset used for this project was provided in the Right Ventricle Segmentation Competition conducted in 2012. The training dataset contains images from 48 patients: 16 training cases, 32 testing cases. For each patient there were a total of 200-280 imges. The images provided in each case were  2D cine images with approximately 8-12 continuous images spanning a single cardiac cycle for each patient along the short axis view. The cardiac images have been zoomed and cropped to a 216x256 pixel region of interest. The labels provided were manual RV segmentations of images. There were a total of 243 labeled images in our training dataset. The testing set contained 514 labeled images without manual contours. We submitted our contour predictions on the test images to the moderators for final evaluation. 
+
+### Problem Statement
+In this project, we will apply a deep learning model (Convolutional Neural Network) to automatically segment the right ventricle in cardiac MRI images. Segmentation of the right ventricle is useful in characterizing the ejection fraction of the heart. We will compare the accuracy of the model to segmentation performed by physicians with years of experience. These manual contours will be what we call the ground truth. This problem was presented as a computer vision challenge at the International Conference on Medical Image Computing and Computer Assisted Intervention in October 2012 [FOOT1]. 
+
+The solution we will implement is a convolutional neural network based on the U-Net architecture [REF5]. 
+
+### Metrics
 
 
