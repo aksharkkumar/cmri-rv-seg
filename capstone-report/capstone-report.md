@@ -1,6 +1,7 @@
 # Automatic Segmentation of Right Ventricle in Cardiac MRIs
 ## Machine Learning Nanodegree Capstone Report
 ###### Akshar Kumar
+###### Feb. 2018
 
 ## I. Definition
 
@@ -19,7 +20,24 @@ The dataset used for this project was provided in the Right Ventricle Segmentati
 ### Problem Statement
 In this project, we will apply a deep learning model (Convolutional Neural Network) to automatically segment the right ventricle in cardiac MRI images. Segmentation of the right ventricle is useful in characterizing the ejection fraction of the heart. We will compare the accuracy of the model to segmentation performed by physicians with years of experience. These manual contours will be what we call the ground truth. This problem was presented as a computer vision challenge at the International Conference on Medical Image Computing and Computer Assisted Intervention in October 2012 [FOOT1]. 
 
-The solution we will implement is a convolutional neural network based on the U-Net architecture [REF5]. 
+The solution we will implement is a convolutional neural network based on the U-Net architecture [REF5]. The U-Net architecture is a popular architecture used for biomedical image segmentation. In this architecture, there is a downsampling path that follows the same structure as a generic CNN. There are convolutional layers followed by max pooling layers, with each step halving the overall image space. The architecture then introduces an upsampling path, which is needed to create a segmentation map of the input image with similar dimensions. In this upsampling path, the image size increases, while the number of channels decrease. In this way we get a segmentation map that will tell us whether or not a pixel is part of our region of interest. [Include figure?]. We also used this architecture because the authors were able to successfully train a model with only 30 images of labeled data. Since we also have few labeled images, we believe this architecture will provide us with a good start for our model.
+
+The tasks that we have to complete during this project can be broken down into three larger categories:
+
+1. Preprocess Data
+   - Clean the data and gather only the labeled images
+   - Explore the data by calculating the image histogram
+   - See how histogram equalization affects training and the data.
+2. Build and train the model
+   - Create a model similar to the U-Net architecture proposed [REF5]
+   - Split data set into training and validation data
+   - Augment the training data.
+   - Train on training data with validation.
+   - Tune hyperparameters: dropout, batch normalization, number of epochs, batch size, etc.
+3. Test the model
+   - Predict contours from the testing data.
+   - Convert the segmentation map to list of points in contour shape.
+   - Submit these predictions to moderators for evaluation.
 
 ### Metrics
 
@@ -30,4 +48,22 @@ D(A,M) = 2*((AnM)/(A+M))
 as desribed by [REF2]. Where D represents the Dice coefficient, A represents the area of the automated contour, and M represents the area of the manual contour performed by the expert. 
 
 
+## II. Analysis
+### Data Exploration
+### Exploratory Visualization
+### Algorithms and Techniques
+### Benchmark
 
+## Methodologies
+### Data Preprocessing
+### Implementation
+### Refinement
+
+## IV. Results
+### Model Evaluation and Validation
+### Justification
+
+## V. Conclusion
+### Free-Form Visualization
+### Reflection
+### Improvement
