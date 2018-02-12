@@ -34,12 +34,12 @@ class UNet(object):
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
             #layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
-            #layer = Dropout(dropout)(layer)
+            layer = Dropout(dropout)(layer)
 
             layer = Conv2D(filters=features,kernel_size=3, padding=padding)(layer)
             #layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
-            #layer = Dropout(dropout)(layer)
+            layer = Dropout(dropout)(layer)
 
             copies.append(layer)
             layer = MaxPooling2D(pool_size=(2, 2))(layer)
@@ -49,12 +49,12 @@ class UNet(object):
         layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
         #layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
-        #layer = Dropout(dropout)(layer)
+        layer = Dropout(dropout)(layer)
 
         layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
         #layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
-        #layer = Dropout(dropout)(layer)
+        layer = Dropout(dropout)(layer)
 
         # upsampling block
         for i in reversed(range(steps)):
@@ -66,12 +66,12 @@ class UNet(object):
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
             #layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
-            #layer = Dropout(dropout)(layer)
+            layer = Dropout(dropout)(layer)
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
             #layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
-            #layer = Dropout(dropout)(layer)
+            layer = Dropout(dropout)(layer)
 
         
         outputs = Conv2D(filters=2,kernel_size=1,activation='softmax')(layer)
