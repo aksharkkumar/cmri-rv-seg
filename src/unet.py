@@ -7,7 +7,7 @@ from keras import backend as K
 
 class UNet(object):
 
-    def get_unet(self, height, width, channels, features=64, steps=4, padding='same'):
+    def get_unet(self, height, width, channels, features=64, steps=4, dropout=0.0, padding='same'):
         '''
             Creates the UNet conv model. 
             Downsampling : repeat downsample 4 times
