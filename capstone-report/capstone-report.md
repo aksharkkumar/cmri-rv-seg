@@ -67,6 +67,9 @@ We will also compare our model to human level performance. The average Dice coef
 
 ## Methodologies
 ### Data Preprocessing
+The dataset we used in this project was relatively clean. The only issue that had to be taken care of was rotating images to the same height and width. Most of the images in the dataset were 256x216, however there a few images for patients that were 216x256, or rotated 90 degrees. We rotated the images while loading them into memory. In addition to rotating the images, we also had to rotate the contours. This was also done when the image masks were being created from the contour data. 
+
+To solve the main issue within our data, it's small size, we used data augmentation techniques. We used the ImageDataGenerator object in Keras to perform our augmentation. 
 ### Implementation
 ### Refinement
 
