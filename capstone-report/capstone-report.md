@@ -69,8 +69,29 @@ We will also compare our model to human level performance. The average Dice coef
 ### Data Preprocessing
 The dataset we used in this project was relatively clean. The only issue that had to be taken care of was rotating images to the same height and width. Most of the images in the dataset were 256x216, however there a few images for patients that were 216x256, or rotated 90 degrees. We rotated the images while loading them into memory. In addition to rotating the images, we also had to rotate the contours. This was also done when the image masks were being created from the contour data. 
 
-To solve the main issue within our data, it's small size, we used data augmentation techniques. We used the ImageDataGenerator object in Keras to perform our augmentation. The parameters we selected for augmentation were rotation\_range=180 degrees, width\_shift\_range = 0.1, height\_shift\_range=0.1, shear\_range=0.1, zoom\_range=0.01, and fill\_mode='nearest'. The image set was split into training and validation sets. The training images set was then used for augmentation. Since the masks had to be augmented with training images, we created two ImageDataGenerator objects, one for the training images and one for the training masks. We kept the augmentation the same by passing in the same seed parameter value in the 'flow()' function for our generators. We augmented the data before each epoch using the 'fit_generator()' function for our model. 
+To solve the main issue within our data, it's small size, we used data augmentation techniques. We used the ImageDataGenerator object in Keras to perform our augmentation. The parameters we selected for augmentation were rotation\_range=180 degrees, width\_shift\_range = 0.1, height\_shift\_range=0.1, shear\_range=0.1, zoom\_range=0.01, and fill\_mode='nearest'. The image set was split into training and validation sets. The training images set was then used for augmentation. Since the masks had to be augmented with training images, we created two ImageDataGenerator objects, one for the training images and one for the training masks. We kept the augmentation the same by passing in the same seed parameter value in the 'flow()' function for our generators. We augmented the data before each epoch using the 'fit_generator()' function for our model.
+- show example of augmented images with masks
+
 ### Implementation
+Code implementation [Add code]:
+- data loading class (ImageData)
+- UNet Convolutional Neural Network model (UNet) 
+- submission code (testevaluation.py)
+
+Training implementation:
+1. Load images and masks into memory.
+2. Split images and masks into training and validation sets.
+3. Augment training data as described above using ImageDataGenerator object.
+4. Load the model architecture.
+5. Train the model using 'fit_generator()' and train image and masks generators as input data. Validation images and masks as validation data.
+6. Calculate the average Traing and Val Dice by predicting the trained model on training images and validation images using 'predict()' function.
+
+Testing implementation:
+1. Load weights, and predict the mask for each testing image.
+2. Create contour for each mask by using OpenCV 'findContours()' function. 
+3. Output [x,y] points to properly labeled text file using eval python class.
+4. Send contour files to moderators for Dice coefficient on Test set.
+
 ### Refinement
 
 ## IV. Results
