@@ -69,7 +69,7 @@ We will also compare our model to human level performance. The average Dice coef
 ### Data Preprocessing
 The dataset we used in this project was relatively clean. The only issue that had to be taken care of was rotating images to the same height and width. Most of the images in the dataset were 256x216, however there a few images for patients that were 216x256, or rotated 90 degrees. We rotated the images while loading them into memory. In addition to rotating the images, we also had to rotate the contours. This was also done when the image masks were being created from the contour data. 
 
-To solve the main issue within our data, it's small size, we used data augmentation techniques. We used the ImageDataGenerator object in Keras to perform our augmentation. 
+To solve the main issue within our data, it's small size, we used data augmentation techniques. We used the ImageDataGenerator object in Keras to perform our augmentation. The parameters we selected for augmentation were rotation\_range=180 degrees, width\_shift\_range = 0.1, height\_shift\_range=0.1, shear\_range=0.1, zoom\_range=0.01, and fill\_mode='nearest'. The image set was split into training and validation sets. The training images set was then used for augmentation. Since the masks had to be augmented with training images, we created two ImageDataGenerator objects, one for the training images and one for the training masks. We kept the augmentation the same by passing in the same seed parameter value in the 'flow()' function for our generators. We augmented the data before each epoch using the 'fit_generator()' function for our model. 
 ### Implementation
 ### Refinement
 
