@@ -75,7 +75,7 @@ To solve the main issue within our data, it's small size, we used data augmentat
 ### Implementation
 Code implementation [Add code]:
 - data loading class (ImageData)
-- UNet Convolutional Neural Network model (UNet) 
+- UNet Convolutional Neural Network model (UNet) [Add model architecture image with dimensions]
 - submission code (testevaluation.py)
 
 Training implementation:
@@ -84,16 +84,18 @@ Training implementation:
 3. Augment training data as described above using ImageDataGenerator object.
 4. Load the model architecture.
 5. Train the model using 'fit_generator()' and train image and masks generators as input data. Validation images and masks as validation data.
-6. Calculate the average Traing and Val Dice by predicting the trained model on training images and validation images using 'predict()' function.
+6. Calculate the average Training and Val Dice by predicting the trained model on training images and validation images using 'predict()' function.
 
 Testing implementation:
 1. Load weights, and predict the mask for each testing image.
 2. Create contour for each mask by using OpenCV 'findContours()' function. 
 3. Output [x,y] points to properly labeled text file using eval python class.
 4. Send contour files to moderators for Dice coefficient on Test set.
-
 ### Refinement
-
+- Change dropout
+- change numbe of epochs
+- batch normalization
+- loss function; learning rate.
 ## IV. Results
 ### Model Evaluation and Validation
 ### Justification
