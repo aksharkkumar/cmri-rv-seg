@@ -55,7 +55,7 @@ def main():
                 x, y = height - y, x
                 contour = np.vstack((x,y)).T
             
-            np.savetxt(filename,contour,fmt="%i",delimiter=' ')
+            np.savetxt(outpath,contour,fmt='%i',delimiter=' ')
 
 
 
