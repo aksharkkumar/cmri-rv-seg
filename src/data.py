@@ -23,9 +23,10 @@ class ImageData(object):
         # load contours first, so we can build a set of labeled images 
         # => then grab only those patient images
         self.images, self.dicoms = self.load_patient_images()
-
-        self.load_patient_masks()
-
+        try:
+            self.load_patient_masks()
+        except FileNotFoundError:
+            pass
         
         
         
