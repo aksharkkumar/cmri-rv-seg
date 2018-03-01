@@ -91,6 +91,13 @@ Testing implementation:
 2. Create contour for each mask by using OpenCV 'findContours()' function. 
 3. Output [x,y] points to properly labeled text file using eval python class.
 4. Send contour files to moderators for Dice coefficient on Test set.
+
+The model implementation involved three separate phases:
+1. Data preprocessing and loading
+2. Model development and training
+3. Test data evaluation and creation of submission files.
+
+In order to load the data into memory and serve it as input to our model, we had to create a custom Python class named ImageData. 
 ### Refinement
 - Change dropout
 - change numbe of epochs
