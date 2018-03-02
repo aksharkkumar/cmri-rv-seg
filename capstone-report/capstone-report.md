@@ -99,7 +99,7 @@ The model implementation involved three separate phases:
 
 In order to load the data into memory and serve it as input to our model, we had to create a custom Python class named ImageData. The ImageData was created for each patient and stored the labeled images along with masks generated from the contours provided for that patient. In addition to loading the images, all images that were 216x256 were rotated to 256x216. When rotating the images, the masks associated were also rotated. 
 
-After creating the data loading class, we had to build our convolutional neural network. 
+After creating the data loading class, we had to build our convolutional neural network. The neural network architecture I followed was the U-Net structure proposed by Rottenberger et al. The U-Net model is made of a downsampling block followed by an upsampling block to create the segementation map of similar dimensions as the input image. 
 ### Refinement
 - Change dropout
 - change numbe of epochs
