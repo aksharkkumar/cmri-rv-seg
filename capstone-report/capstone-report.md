@@ -97,7 +97,9 @@ The model implementation involved three separate phases:
 2. Model development and training
 3. Test data evaluation and creation of submission files.
 
-In order to load the data into memory and serve it as input to our model, we had to create a custom Python class named ImageData. 
+In order to load the data into memory and serve it as input to our model, we had to create a custom Python class named ImageData. The ImageData was created for each patient and stored the labeled images along with masks generated from the contours provided for that patient. In addition to loading the images, all images that were 216x256 were rotated to 256x216. When rotating the images, the masks associated were also rotated. 
+
+After creating the data loading class, we had to build our convolutional neural network. 
 ### Refinement
 - Change dropout
 - change numbe of epochs
