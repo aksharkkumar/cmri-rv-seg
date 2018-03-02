@@ -78,14 +78,6 @@ Code implementation [Add code]:
 - UNet Convolutional Neural Network model (UNet) [Add model architecture image with dimensions]
 - submission code (testevaluation.py)
 
-Training implementation:
-1. Load images and masks into memory.
-2. Split images and masks into training and validation sets.
-3. Augment training data as described above using ImageDataGenerator object.
-4. Load the model architecture.
-5. Train the model using 'fit_generator()' and train image and masks generators as input data. Validation images and masks as validation data.
-6. Calculate the average Training and Val Dice by predicting the trained model on training images and validation images using 'predict()' function.
-
 Testing implementation:
 1. Load weights, and predict the mask for each testing image.
 2. Create contour for each mask by using OpenCV 'findContours()' function. 
@@ -100,6 +92,15 @@ The model implementation involved three separate phases:
 In order to load the data into memory and serve it as input to our model, we had to create a custom Python class named ImageData. The ImageData was created for each patient and stored the labeled images along with masks generated from the contours provided for that patient. In addition to loading the images, all images that were 216x256 were rotated to 256x216. When rotating the images, the masks associated were also rotated. 
 
 After creating the data loading class, we had to build our convolutional neural network. The neural network architecture I followed was the U-Net structure proposed by Rottenberger et al. The U-Net model is made of a downsampling block followed by an upsampling block to create the segementation map of similar dimensions as the input image. The downsampling block is a series of 2 convolutional layers followed by a max-pooling layer. The convolutional layers use the ReLU activation function, 3x3 filter size, 32 features at the start, and padding='same'. The max-pooling layer had a pool size of 2. At each downsampling step, the feature size was doubled, and this block of conv=>conv=>max_pool was repeated for 3 steps. At each step, we were also making copies of the output from the second convolution to be used for our upsmapling block. When upsampling, we had an upconvolution step followed by two convolutions. At each step we were halving the number of filters for our layers. The output of the model was a binary segmentation mask of similar dimensions as the input. This was created by applying one last convolution with filter size 2, kernel size 1, and a softmax activation function. The output mask labeled a white pixel as part of the right ventricle, while a black pixel was part of the background.
+
+With our model built, we were ready to start training. Our training process followed the following steps:
+Training implementation:
+1. Load images and masks into memory.
+2. Split images and masks into training and validation sets.
+3. Augment training data as described above using ImageDataGenerator object.
+4. Load the model architecture.
+5. Train the model using 'fit_generator()' and train image and masks generators as input data. Validation images and masks as validation data.
+6. Calculate the average Training and Val Dice by predicting the trained model on training images and validation images using 'predict()' function.
 
 
 ### Refinement
