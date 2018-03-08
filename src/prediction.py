@@ -33,11 +33,12 @@ class Predictor(object):
         
         return o_predictions, i_predictions
 
-    def make_predictions_one(self,data_dir):
+    def make_predictions_one(self,data_dir,num_imgs):
         images, _, _ = self.load_images(data_dir)
+        images_trunc = images[:num_imgs] # only look at a few images
         o_predictions = []
         i_predictions = []
-        for image in images:
+        for image in images_trunc:
             o_mask_pred = self.o_model.predict(image[None,:,:,:])
             i_mask_pred = self.i_model.predict(image[None,:,:,:])
             o_predictions.append((image[:,:,0],o_mask_pred[0,:,:,1]))
