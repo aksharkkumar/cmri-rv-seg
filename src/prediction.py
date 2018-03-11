@@ -14,8 +14,8 @@ class Predictor(object):
         _, height, width, channels = images.shape
         self.o_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
         self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
-        self.o_model.load_weights('notebooks/saved_models/endo_models/weightsNoDrop.hdf5')
-        self.i_model.load_weights('notebooks/saved_models/epi_models/weightsNoDrop.hdf5')
+        self.o_model.load_weights('saved_models/endo_models/weightsNoDrop.hdf5')
+        self.i_model.load_weights('saved_models/epi_models/weightsNoDrop.hdf5')
 
     def make_predictions(self,out_dir):
         for path in self.patient_dirs:
@@ -41,13 +41,15 @@ class Predictor(object):
         for image in images_trunc:
             o_mask_pred = self.o_model.predict(image[None,:,:,:])
             i_mask_pred = self.i_model.predict(image[None,:,:,:])
-            o_predictions.append((image[:,:,0],o_mask_pred[0,:,:,1]))
-            i_predictions.append((image[:,:,0],i_mask_pred[0,:,:,1]))
+            o_predictions.append((image[:,:,0],o_mask_pred))
+            i_predictions.append((image[:,:,0],i_mask_pred))
         return o_predictions,i_predictions
 
     def load_images(self,path):
         img_data_obj = data.ImageData(path)
-        images=np.asarray(img_data_obj.images.values,dtype='float64')[:,:,:,None]
+        imgs = list(img_data_obj.images.values())
+        print(len(imgs))
+        images=np.asarray(imgs,dtype='float64')[:,:,:,None]
         return images, img_data_obj.images.keys, img_data_obj.rotated
     
     
