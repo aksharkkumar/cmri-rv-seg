@@ -11,12 +11,15 @@ class ImageData(object):
         search_results = glob.glob(search)
         self.contour_files = search_results[0]
 
-        self.images = dict()
-        self.dicoms = dict()
-        self.endo_contours = dict()
-        self.epi_contours = dict()
-        self.endo_masks = dict()
-        self.epi_masks = dict()
+        match = re.search("P(..)list.txt", self.contour_files)
+        self.index = int(match.group(1))
+
+        self.images = []
+        self.dicoms = []
+        self.endo_contours = []
+        self.epi_contours = []
+        self.endo_masks = []
+        self.epi_masks = []
         self.width = 256
         self.height = 216
         self.rotated = False
@@ -32,22 +35,22 @@ class ImageData(object):
         
     @property
     def labeled_images(self):
-        return [self.images[key] for key in self.img_keys]
+        return [self.images[val] for val in self.labels]
     def load_patient_images(self):
         dcm_path = os.path.join(self.dir, "*dicom/*.dcm")
-        dcms = glob.glob(dcm_path)
-        images = dict()
-        dicoms = dict()
+        dcms = sorted(glob.glob(dcm_path))
+        images = []
+        dicoms = []
         for dcm in dcms:
             # print(dcm)
-            match = re.search(".*(........).dcm",dcm)
-            dcm_key = match.group(1)
+            #match = re.search(".*(........).dcm",dcm)
+            #dcm_key = match.group(1)
             # print(dcm_key)
             # print(dcm_key)
             ds = dicom.read_file(dcm)
             img = self.rotate_image(ds.pixel_array)
-            images[dcm_key] = img
-            dicoms[dcm_key] = ds
+            images.append( img )
+            dicoms.append( ds )
         return images, dicoms
 
     def load_patient_masks(self):
@@ -79,18 +82,19 @@ class ImageData(object):
         #     self.img_keys.add(img_label)
         
         
-        self.img_keys = set()
+        self.labels = []
         for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
             # build set of labeled images => not all images are labeled
-            match = re.search(".*(........)-.contour",i_contour_file)
-            img_label = match.group(1)
-            self.img_keys.add(img_label)
+            match = re.search("P..-(....)-.contour",i_contour_file)
+            p_idx = int(match.group(1))
+            #print(p_idx)
+            self.labels.append(p_idx)
             i_x, i_y = self.read_contour_files(i_contour_file)
             o_x, o_y = self.read_contour_files(o_contour_file)
-            self.endo_contours[img_label] = (i_x,i_y)
-            self.epi_contours[img_label] = (o_x,o_y)
-            self.endo_masks[img_label] = self.create_masks(i_x, i_y)
-            self.epi_masks[img_label] = self.create_masks(o_x, o_y)
+            self.endo_contours.append(  (i_x,i_y) )
+            self.epi_contours.append( (o_x,o_y) )
+            self.endo_masks.append( self.create_masks(i_x, i_y) )
+            self.epi_masks.append( self.create_masks(o_x, o_y) )
 
 
 
