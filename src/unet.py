@@ -60,8 +60,8 @@ class UNet(object):
         for i in reversed(range(steps)):
             features //= 2
             layer = Conv2DTranspose(filters=features,kernel_size=2,strides=2)(layer)
-            crop_copy = self.crop(layer,copies[i])
-            layer = Concatenate()( [layer, crop_copy] )
+            #crop_copy = self.crop(layer,copies[i])
+            layer = Concatenate()( [layer, copies[i]] )
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
             #layer = BatchNormalization()(layer)
