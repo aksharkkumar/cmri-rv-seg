@@ -1,6 +1,6 @@
 import os, glob, re
 import numpy as np
-import dicom
+import pydicom
 
 from PIL import Image, ImageDraw
 
@@ -47,7 +47,7 @@ class ImageData(object):
             #dcm_key = match.group(1)
             # print(dcm_key)
             # print(dcm_key)
-            ds = dicom.read_file(dcm)
+            ds = pydicom.read_file(dcm)
             img = self.rotate_image(ds.pixel_array)
             images.append( img )
             dicoms.append( ds )
