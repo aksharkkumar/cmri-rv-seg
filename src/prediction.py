@@ -15,7 +15,7 @@ class Predictor(object):
         images, _ = self.load_images(self.patient_dirs[0])
         _, height, width, channels = images.shape
         #self.o_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
-        self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
+        self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=64,steps=3)
         #self.o_model.load_weights(weight_dir)
         self.i_model.load_weights(weight_endo_file)
 
@@ -37,7 +37,8 @@ class Predictor(object):
 
     def make_predictions_one(self,data_dir,num_imgs):
         images, _ = self.load_images(data_dir)
-        images_trunc = images[:num_imgs] # only look at a few images
+        size = len(images)
+        images_trunc = images[num_imgs:(size-num_imgs)] # only look at a few images
         o_predictions = []
         i_predictions = []
         for image in images_trunc:
@@ -52,9 +53,14 @@ class Predictor(object):
         imgs = img_data_obj.images
         print(len(imgs))
         images=np.asarray(imgs,dtype='float64')[:,:,:,None]
+        #self.normalize(images)
         return images, img_data_obj.rotated
     
+    def normalize(x, epsilon=1e-7):
+        x -= np.mean(x, keepdims=True)
+        x /= np.std(x, keepdims=True) + epsilon
     
+
     def save_predictions(self,predictions,p_ids,rotated,class_type,out_dir):
         for(image,mask),p_id in zip(predictions,p_ids):
             filename = p_id + class_type + "contour-auto.txt"
