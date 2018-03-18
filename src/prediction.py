@@ -7,15 +7,17 @@ import cv2
 from src import data, unet
 
 class Predictor(object):
-    def __init__(self,data_dir):
+    def __init__(self,data_dir,weight_file):
         glob_search = os.path.join(data_dir,"patient*")
         self.patient_dirs=sorted(glob.glob(glob_search))
-        images, _, _ = self.load_images(self.patient_dirs[0])
+        weight_endo_file = os.path.join("saved_models/endo_models",weight_file)
+        #weight_epi_file = os.path.join("saved_models/epi_models",weight_file)
+        images, _ = self.load_images(self.patient_dirs[0])
         _, height, width, channels = images.shape
-        self.o_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
+        #self.o_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
         self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
-        self.o_model.load_weights('saved_models/endo_models/weightsNoDrop.hdf5')
-        self.i_model.load_weights('saved_models/epi_models/weightsNoDrop.hdf5')
+        #self.o_model.load_weights(weight_dir)
+        self.i_model.load_weights(weight_endo_file)
 
     def make_predictions(self,out_dir):
         for path in self.patient_dirs:
@@ -34,23 +36,23 @@ class Predictor(object):
         return o_predictions, i_predictions
 
     def make_predictions_one(self,data_dir,num_imgs):
-        images, _, _ = self.load_images(data_dir)
+        images, _ = self.load_images(data_dir)
         images_trunc = images[:num_imgs] # only look at a few images
         o_predictions = []
         i_predictions = []
         for image in images_trunc:
-            o_mask_pred = self.o_model.predict(image[None,:,:,:])
+            #o_mask_pred = self.o_model.predict(image[None,:,:,:])
             i_mask_pred = self.i_model.predict(image[None,:,:,:])
-            o_predictions.append((image[:,:,0],o_mask_pred))
+            #o_predictions.append((image[:,:,0],o_mask_pred))
             i_predictions.append((image[:,:,0],i_mask_pred))
         return o_predictions,i_predictions
 
     def load_images(self,path):
         img_data_obj = data.ImageData(path)
-        imgs = list(img_data_obj.images.values())
+        imgs = img_data_obj.images
         print(len(imgs))
         images=np.asarray(imgs,dtype='float64')[:,:,:,None]
-        return images, img_data_obj.images.keys, img_data_obj.rotated
+        return images, img_data_obj.rotated
     
     
     def save_predictions(self,predictions,p_ids,rotated,class_type,out_dir):
