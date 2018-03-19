@@ -38,7 +38,7 @@ class Predictor(object):
     def make_predictions_one(self,data_dir,num_imgs):
         images, _ = self.load_images(data_dir)
         size = len(images)
-        images_trunc = images[num_imgs:(size-num_imgs)] # only look at a few images
+        images_trunc = images[:num_imgs] # only look at a few images
         o_predictions = []
         i_predictions = []
         for image in images_trunc:
@@ -51,14 +51,14 @@ class Predictor(object):
     def load_images(self,path):
         img_data_obj = data.ImageData(path)
         imgs = img_data_obj.images
-        print(len(imgs))
-        images=np.asarray(imgs,dtype='float64')[:,:,:,None]
-        #self.normalize(images)
+        #print(len(imgs))
+        images=np.asarray(imgs)[:,:,:,None].astype('float64')
+        self.normalize(images, axis=(1,2))
         return images, img_data_obj.rotated
     
-    def normalize(x, epsilon=1e-7):
-        x -= np.mean(x, keepdims=True)
-        x /= np.std(x, keepdims=True) + epsilon
+    def normalize(x, epsilon=1e-7, axis=(1,2)):
+        x -= np.mean(x, axis=axis, keepdims=True)
+        x /= np.std(x, axis=axis, keepdims=True) + epsilon
     
 
     def save_predictions(self,predictions,p_ids,rotated,class_type,out_dir):
