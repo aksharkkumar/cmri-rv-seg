@@ -83,12 +83,14 @@ class ImageData(object):
         
         
         self.labels = []
-        for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
+        for i_contour_file in i_contour_files:
             # build set of labeled images => not all images are labeled
             match = re.search("P..-(....)-.contour",i_contour_file)
             p_idx = int(match.group(1))
             #print(p_idx)
             self.labels.append(p_idx)
+        
+        for i_contour_file, o_contour_file in zip(i_contour_files, o_contour_files):
             i_x, i_y = self.read_contour_files(i_contour_file)
             o_x, o_y = self.read_contour_files(o_contour_file)
             self.endo_contours.append(  (i_x,i_y) )

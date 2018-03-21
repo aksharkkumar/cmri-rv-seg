@@ -15,7 +15,7 @@ class Predictor(object):
         images, _ = self.load_images(self.patient_dirs[0])
         _, height, width, channels = images.shape
         #self.o_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
-        self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=64,steps=3)
+        self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
         #self.o_model.load_weights(weight_dir)
         self.i_model.load_weights(weight_endo_file)
 
@@ -39,6 +39,7 @@ class Predictor(object):
         images, _ = self.load_images(data_dir)
         size = len(images)
         images_trunc = images[:num_imgs] # only look at a few images
+        self.normalize(images_trunc)
         o_predictions = []
         i_predictions = []
         for image in images_trunc:
@@ -50,10 +51,10 @@ class Predictor(object):
 
     def load_images(self,path):
         img_data_obj = data.ImageData(path)
-        imgs = img_data_obj.images
-        #print(len(imgs))
+        imgs = img_data_obj.labeled_images
+        print(len(imgs))
         images=np.asarray(imgs)[:,:,:,None].astype('float64')
-        self.normalize(images, axis=(1,2))
+        #self.normalize(images, axis=(1,2))
         return images, img_data_obj.rotated
     
     def normalize(x, epsilon=1e-7, axis=(1,2)):
