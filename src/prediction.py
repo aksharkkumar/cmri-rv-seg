@@ -44,11 +44,11 @@ class Predictor(object):
     def make_predictions_one(self,data_dir,num_imgs):
         images, _ = self.load_images(data_dir)
         size = len(images)
-        images_trunc = images[:num_imgs] # only look at a few images
-        self.normalize(images_trunc)
+        #images_trunc = images[:num_imgs] # only look at a few images
+        #self.normalize(images_trunc)
         o_predictions = []
         i_predictions = []
-        for image in images_trunc:
+        for image in images:
             #o_mask_pred = self.o_model.predict(image[None,:,:,:])
             i_mask_pred = self.i_model.predict(image[None,:,:,:])
             #o_predictions.append((image[:,:,0],o_mask_pred))
@@ -58,11 +58,11 @@ class Predictor(object):
     def load_images(self,path):
         img_data_obj = data.ImageData(path)
         imgs = img_data_obj.labeled_images
-        print(len(imgs))
-        print(type(imgs))
+        #print(len(imgs))
+        #print(type(imgs))
         images=np.asarray(imgs)[:,:,:,None].astype('float64')
-        print(images[0].shape)
-        print(images.ndim)
+        #print(images[0].shape)
+        #print(images.ndim)
         #print(images[0])
         normalize(images)
         return images, img_data_obj.rotated
