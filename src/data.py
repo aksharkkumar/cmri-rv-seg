@@ -28,7 +28,7 @@ class ImageData(object):
         self.images, self.dicoms = self.load_patient_images()
         try:
             self.load_patient_masks()
-        except FileNotFoundError:
+        except OSError:
             pass
         
         

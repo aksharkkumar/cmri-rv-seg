@@ -6,6 +6,12 @@ import matplotlib.pyplot as plt
 import cv2
 from src import data, unet
 
+
+def normalize(x, epsilon=1e-7, axis=(1,2)):
+        x -= np.mean(x, axis=axis, keepdims=True)
+        x /= np.std(x, axis=axis, keepdims=True) + epsilon
+        
+        
 class Predictor(object):
     def __init__(self,data_dir,weight_file):
         glob_search = os.path.join(data_dir,"patient*")
@@ -53,13 +59,15 @@ class Predictor(object):
         img_data_obj = data.ImageData(path)
         imgs = img_data_obj.labeled_images
         print(len(imgs))
+        print(type(imgs))
         images=np.asarray(imgs)[:,:,:,None].astype('float64')
-        #self.normalize(images, axis=(1,2))
+        print(images[0].shape)
+        print(images.ndim)
+        #print(images[0])
+        normalize(images)
         return images, img_data_obj.rotated
     
-    def normalize(x, epsilon=1e-7, axis=(1,2)):
-        x -= np.mean(x, axis=axis, keepdims=True)
-        x /= np.std(x, axis=axis, keepdims=True) + epsilon
+    
     
 
     def save_predictions(self,predictions,p_ids,rotated,class_type,out_dir):
