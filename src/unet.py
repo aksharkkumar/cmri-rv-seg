@@ -1,5 +1,5 @@
 import numpy as np
-from keras.layers import Input, Conv2D, Conv2DTranspose, Cropping2D, MaxPooling2D, GlobalAveragePooling2D
+from keras.layers import Input, Conv2D, Conv2DTranspose, Cropping2D, MaxPooling2D, GlobalAveragePooling2D, Lambda
 from keras.layers import Dropout, Flatten, Dense, Concatenate, Activation, BatchNormalization
 from keras.models import Model
 from keras import backend as K
@@ -60,8 +60,8 @@ class UNet(object):
         for i in reversed(range(steps)):
             features //= 2
             layer = Conv2DTranspose(filters=features,kernel_size=2,strides=2)(layer)
-            #crop_copy = self.crop(layer,copies[i])
-            layer = Concatenate()( [layer, copies[i]] )
+            crop_copy = self.crop(layer,copies[i])
+            layer = Concatenate()( [layer, crop_copy] )
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
             #layer = BatchNormalization()(layer)
@@ -74,8 +74,11 @@ class UNet(object):
             layer = Dropout(dropout)(layer)
 
         
-        outputs = Conv2D(filters=2,kernel_size=1,activation='softmax')(layer)
-
+        layer = Conv2D(filters=2,kernel_size=1)(layer)
+        
+        layer = Lambda(lambda x: x/1.0)(layer)
+        outputs = Activation('softmax')(layer)
+        
         return Model(inputs=inputs,outputs=outputs)
 
 
