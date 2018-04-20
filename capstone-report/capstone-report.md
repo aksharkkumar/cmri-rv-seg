@@ -93,12 +93,13 @@ In order to load the data into memory and serve it as input for training the mod
 
 After creating the data loading class, we had to build our convolutional neural network. The neural network architecture we followed was the U-Net structure proposed by Rottenberger et al. The U-Net model is made of a downsampling block followed by an upsampling block to create the segmentation map of similar dimensions as the input image. The downsampling block is a series of 2 convolutional layers followed by a max-pooling layer. The convolutional layers use the ReLU activation function, 3x3 filter size, 32 features at the start, and padding='same'. The max-pooling layer had a pool size of 2. At each downsampling step, the feature size was doubled, and this block of conv=>conv=>max\_pool was repeated for 3 steps. At each step, we were also making copies of the output from the second convolution to be used for our upsampling block. When upsampling, we had an up-convolution step followed by two convolutions. At each step we were halving the number of filters for our layers. The output of the model was a binary segmentation mask of similar dimensions as the input. This was created by applying one last convolution with filter size 2, kernel size 1, and a softmax activation function. The output mask labeled a white pixel as part of the right ventricle, while a black pixel was part of the background.
 
-We implemented the U-Net CNN using the deep learning library, Keras. We built our network on a Tensorflow backend. The downsampling block used the standard Conv2D object for our convolutional layers. We used a MaxPooling2D layer for our max-pooling layer. The real difference was in the upsampling block of the neural network. 
+We implemented the U-Net CNN using the deep learning library, Keras. We built our network on a Tensorflow backend. The downsampling block used the standard Conv2D object for our convolutional layers. We used a MaxPooling2D layer for our max-pooling layer. For the upsampling block of the network, we had to perform an transposed convolution followed by two Conv2D layers. To perform the transposed convolution, we used the ConvTranspose2D object from Keras. The code for our implementation can be found in Figure XX. 
 
-With our model built, we were ready to start training. Our training process followed the following steps:
+After creating the ImageData class and the UNet class, we were ready to train our model. All the training was done within a Jupyter Notebook. In order to train the Unet model, we followed the following steps: 
 Training implementation:
-1. Load images and masks into memory.
-2. Split images and masks into training and validation sets.
+1. Load images and masks into memory : This was done as described using the ImageData class.
+2. Split images and masks into training and validation sets
+   - We split the training set into 80% training data and 20% validation. 
 3. Augment training data as described above using ImageDataGenerator object.
 4. Load the model architecture.
 5. Train the model using 'fit\_generator()' and train image and masks generators as input data. Validation images and masks as validation data.
