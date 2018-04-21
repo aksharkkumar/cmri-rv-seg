@@ -101,9 +101,12 @@ Training implementation:
 2. Split images and masks into training and validation sets
    - We split the training set into 80% training data and 20% validation. 
 3. Augment training data as described above using ImageDataGenerator object.
+   - The training data set was augmented by introducing random rotations, shifts, shears and zooms. We created an ImageDataGenerator object for both the training images and the training masks. We did this because if an image was augmented, we would have to augment the corresponding mask to serve as the appropriate label for our neural network layers. In order to synchronize the generator objects, we had to provide the same 'seed' parameter value in the 'flow()' function. 
 4. Load the model architecture.
-5. Train the model using 'fit\_generator()' and train image and masks generators as input data. Validation images and masks as validation data.
+   - To load the UNet convolutional neural network, we created an instance of the UNet class and called the 'get_unet()' function from the class. The parameters we passed to this function was height=126, width=256, channels=1, features=32, steps=3, dropout=0.0, and padding='same'. 
+5. Train the model using the 'fit\_generator()' and train image and masks generators as input data. We trained for 500 epochs and a batch size of 32. We also passed the validation images and corresponding masks to the 'fit_generator()' function as validation_data. We saved the weights corresponding to the best validation loss value.
 6. Calculate the average Training and Val Dice by predicting the trained model on training images and validation images using 'predict()' function.
+   - To evaluate the performance of the model immediately, we used the model to predict on training and validation images and then found the average dice value for each set. The official evaluation was performed by sending the segmentation results on the testing data to the rvsc moderators. 
 
 
 ### Refinement
