@@ -1,7 +1,7 @@
 # Automatic Segmentation of Right Ventricle in Cardiac MRIs
 ## Machine Learning Nanodegree Capstone Report
 ###### Akshar Kumar
-###### Feb. 2018
+###### May 2018
 
 ## I. Definition
 
@@ -110,6 +110,8 @@ Training implementation:
 
 
 ### Refinement
+As described above, the UNet architecture was used to perform automatic segmentation of the right ventricle in MRI images. However, there were multiple iterations and tuning steps performed on the basic UNet parameters to acheive the best score on our validation set. The results described in Section IV [REF Section 5] will be for the model that performed segmentation on the testing sets, and was submitted to the contest moderators for final dice score. To describe the refinement process, we will use the dice score for models calculated by making predictions on the validation set. This allowed us to quickly improve the model without having to constantly submit results on the testing data and wait for a response. 
+ 
 - Change dropout
 - change numbe of epochs
 - batch normalization
