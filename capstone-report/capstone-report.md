@@ -112,6 +112,7 @@ Training implementation:
 ### Refinement
 As described above, the UNet architecture was used to perform automatic segmentation of the right ventricle in MRI images. However, there were multiple iterations and tuning steps performed on the basic UNet parameters to acheive the best score on our validation set. The results described in Section IV [REF Section 5] will be for the model that performed segmentation on the testing sets, and was submitted to the contest moderators for final dice score. To describe the refinement process, we will use the dice score for models calculated by making predictions on the validation set. This allowed us to quickly improve the model without having to constantly submit results on the testing data and wait for a response. All the models described will have the same basic architecture (32 features, 3 steps for upsampling and downsampling, batch_size of 32). The hyperparameters that were tuned were the loss function, learning rate, number of epochs, and whether to include a non-zero dropout. 
 
+These were the various combinations of hyperparameters that models were trained on.
 1. 250 Epochs, No Dropout, Adam optimizer (lr=1e-5)
 2. 500 Epochs, No Dropout, Adam optimizer (lr=1e-5)
 3. 500 Epochs, 0.2 Dropout, Adam optimizer (lr=1e-5)
@@ -119,6 +120,10 @@ As described above, the UNet architecture was used to perform automatic segmenta
 5. 500 Epochs, No Dropout, SGD optimizer (lr=1e-3)
 6. 250 Epochs, No Dropout, Adam (lr=1e-3)
 7. 500 Epochs, No Dropout, Adam (lr=1e-3)
+
+
+
+
 - Change dropout
 - change numbe of epochs
 - batch normalization
