@@ -115,11 +115,10 @@ As described above, the UNet architecture was used to perform automatic segmenta
 These were the various combinations of hyperparameters that models were trained on.
 1. 250 Epochs, No Dropout, Adam optimizer (lr=1e-5)
 2. 500 Epochs, No Dropout, Adam optimizer (lr=1e-5)
-3. 500 Epochs, 0.2 Dropout, Adam optimizer (lr=1e-5)
-4. 500 Epochs, 0.5 Dropout, Adam optimizer (lr=1e-5)
-5. 500 Epochs, No Dropout, SGD optimizer (lr=1e-3)
-6. 250 Epochs, No Dropout, Adam (lr=1e-3)
-7. 500 Epochs, No Dropout, Adam (lr=1e-3)
+3. 250 Epochs, No Dropout, Adam (lr=1e-3)
+4. 250 Epochs, 0.2 Dropout, Adam optimizer (lr=1e-3)
+5. 250 Epochs, 0.5 Dropout, Adam optimizer (lr=1e-3)
+6. 500 Epochs, No Dropout, Adam (lr=1e-3)
 
 
 
