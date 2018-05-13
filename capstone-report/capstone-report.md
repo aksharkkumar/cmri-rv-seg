@@ -116,14 +116,15 @@ These were the various combinations of hyperparameters that models were trained 
 1. 250 Epochs, No Dropout, Adam optimizer (lr=1e-5)
 2. 500 Epochs, No Dropout, Adam optimizer (lr=1e-5)
 3. 250 Epochs, No Dropout, Adam (lr=1e-3)
-4. 250 Epochs, 0.2 Dropout, Adam optimizer (lr=1e-3)
-5. 250 Epochs, 0.5 Dropout, Adam optimizer (lr=1e-3)
-6. 500 Epochs, No Dropout, Adam (lr=1e-3)
+4. 500 Epochs, 0.2 Dropout, Adam optimizer (lr=1e-3)
 
 The first combination of hyperparameters that was used for training was 250 epochs, no dropout, and the Adam optimizer with a 1e-5 learning rate. After training, we ran predictions on the validation set for immediate feedback on the accuracy of our model. For each image in the validation set, we predicted the mask using our model and then calculated the Dice coefficient. We then averaged the Dice coefficient for all images in the validation set. That value is what will be presented for the validation Dice score of each model. For the initial model trained, we received an average Dice value of 0.94 with a standard deviation of 0.03 across the data set. Although the model acheived a high average Dice score, when actual masks were generated and viewed, we could see that the model was incorrectly predicting extra pixels as part of the right ventricle. In a sense, the model did not have context to realize that there is only one right ventricle in an image. 
 
 A possible solution to this issue was to increase the number of epochs that the model would be trained. Thus, we doubled the number of epochs from 250 to 500 while keeping all other hyperparamters the same. This model received an average Dice score of 0.95 with a standard deviation of 0.02. However, as can be seen in [FIGURE XX] the same problem was occuring in some of the images. 
 
+Since increasing epochs did not seem to solve the issue, we decreased the epochs back to 250, but changed the learning rate of our optimizer to a value of 0.001.
+
+To reduce the overfitting, we added a dropout value of 0.2. Since we added dropout, we increased the number of epochs to 500 as dropout requires more epochs to converge.  
 
 ## IV. Results
 ### Model Evaluation and Validation
