@@ -124,7 +124,9 @@ A possible solution to this issue was to increase the number of epochs that the 
 
 Since increasing epochs did not seem to solve the issue, we decreased the epochs back to 250, but changed the learning rate of our optimizer to a value of 0.001.
 
-To reduce the overfitting, we added a dropout value of 0.2. Since we added dropout, we increased the number of epochs to 500 as dropout requires more epochs to converge.  
+To reduce the overfitting, we added a dropout value of 0.2. Since we added dropout, we increased the number of epochs to 500 as dropout requires more epochs to converge. 
+
+The last two models performed much better in terms of average Dice score and the masks produced, so they were used to make predictions on the testing dataset. The results were then sent to the competition moderators for final Dice score on the testing sets. These results are reported in Section IV.  
 
 ## IV. Results
 ### Model Evaluation and Validation
