@@ -55,6 +55,16 @@ class UNet(object):
         #layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
         layer = Dropout(dropout)(layer)
+        
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
+        #layer = BatchNormalization()(layer)
+        layer = Activation('relu')(layer)
+        layer = Dropout(dropout)(layer)
+
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
+        #layer = BatchNormalization()(layer)
+        layer = Activation('relu')(layer)
+        layer = Dropout(dropout)(layer)
 
         # upsampling block
         for i in reversed(range(steps)):
