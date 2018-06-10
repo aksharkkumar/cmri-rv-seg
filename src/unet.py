@@ -31,30 +31,16 @@ class UNet(object):
         copies = []
         # downsampling block
         for i in range(steps):
-            layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
-            layer = Activation('relu')(layer)
+            layer = Conv2D(filters=features,kernel_size=3,padding=padding,activation='relu')(layer)
             layer = Dropout(dropout)(layer)
 
-            layer = Conv2D(filters=features,kernel_size=3, padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
-            layer = Activation('relu')(layer)
+            layer = Conv2D(filters=features,kernel_size=3,padding=padding,activation='relu')(layer)
             layer = Dropout(dropout)(layer)
 
             copies.append(layer)
             layer = MaxPooling2D(pool_size=(2, 2))(layer)
             
             features *= 2
-
-        layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-        #layer = BatchNormalization()(layer)
-        layer = Activation('relu')(layer)
-        layer = Dropout(dropout)(layer)
-
-        layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-        #layer = BatchNormalization()(layer)
-        layer = Activation('relu')(layer)
-        layer = Dropout(dropout)(layer)
         
         layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
         #layer = BatchNormalization()(layer)
@@ -73,14 +59,10 @@ class UNet(object):
             crop_copy = self.crop(layer,copies[i])
             layer = Concatenate()( [layer, crop_copy] )
 
-            layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
-            layer = Activation('relu')(layer)
+            layer = Conv2D(filters=features,kernel_size=3,padding=padding,activation='relu')(layer)
             layer = Dropout(dropout)(layer)
 
-            layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
-            layer = Activation('relu')(layer)
+            layer = Conv2D(filters=features,kernel_size=3,padding=padding,activation='relu')(layer)
             layer = Dropout(dropout)(layer)
 
         
@@ -108,7 +90,7 @@ class UNet(object):
 
 
         if crop_height == 0 and crop_width == 0:
-            copy = layer
+            copy = conv_copy
         else :
             cropping = ((crop_height // 2, crop_height - crop_height//2), (crop_width // 2, crop_width - crop_width//2))
             copy = Cropping2D(cropping=cropping)(conv_copy)
