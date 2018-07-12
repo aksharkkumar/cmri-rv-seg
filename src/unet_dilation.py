@@ -46,17 +46,31 @@ class UNet(object):
             
             features *= 2
             
-        layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding,dilation_rate=2)(layer)
         #layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
         layer = Dropout(dropout)(layer)
         
-        layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding,dilation_rate=4)(layer)
         #layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
         layer = Dropout(dropout)(layer)
         
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding,dilation_rate=8)(layer)
+        #layer = BatchNormalization()(layer)
+        layer = Activation('relu')(layer)
+        layer = Dropout(dropout)(layer)
         
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding,dilation_rate=16)(layer)
+        #layer = BatchNormalization()(layer)
+        layer = Activation('relu')(layer)
+        layer = Dropout(dropout)(layer)
+        
+        layer = Conv2D(filters=features,kernel_size=3,padding=padding,dilation_rate=32)(layer)
+        #layer = BatchNormalization()(layer)
+        layer = Activation('relu')(layer)
+        layer = Dropout(dropout)(layer)
+
         # upsampling block
         for i in reversed(range(steps)):
             features //= 2
@@ -65,12 +79,12 @@ class UNet(object):
             layer = Concatenate()( [layer, crop_copy] )
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
+         #   layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
             layer = Dropout(dropout)(layer)
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
+          #  layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
             layer = Dropout(dropout)(layer)
 

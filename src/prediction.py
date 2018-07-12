@@ -13,16 +13,16 @@ def normalize(x, epsilon=1e-7, axis=(1,2)):
         
         
 class Predictor(object):
-    def __init__(self,data_dir,weight_file):
+    def __init__(self,data_dir,weight_file,o_model,i_model):
         glob_search = os.path.join(data_dir,"patient*")
         self.patient_dirs=sorted(glob.glob(glob_search))
         weight_endo_file = os.path.join("saved_models/endo_models",weight_file)
         weight_epi_file = os.path.join("saved_models/epi_models",weight_file)
         images, _, _, _ = self.load_images(self.patient_dirs[0])
         _, height, width, channels = images.shape
-        # self.o_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
-        self.i_model = unet.UNet().get_unet(height=height,width=width,channels=channels,features=64,steps=3)
-        # self.o_model.load_weights(weight_epi_file)
+        self.o_model = o_model#unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
+        self.i_model = i_model #unet.UNet().get_unet(height=height,width=width,channels=channels,features=32,steps=3)
+        self.o_model.load_weights(weight_epi_file)
         self.i_model.load_weights(weight_endo_file)
 
     def make_predictions(self,out_dir):
@@ -32,15 +32,16 @@ class Predictor(object):
             o_predictions=[]
             i_predictions=[]
             for image in images:
-                # o_mask_pred = self.o_model.predict(image[None,:,:,:])
+                o_mask_pred = self.o_model.predict(image[None,:,:,:])
                 i_mask_pred = self.i_model.predict(image[None,:,:,:])
-                # o_predictions.append((image[:,:,0],o_mask_pred[0,:,:,1]))
+                o_predictions.append((image[:,:,0],o_mask_pred[0,:,:,1]))
                 i_predictions.append((image[:,:,0],i_mask_pred[0,:,:,1]))
             p_out_dir = os.path.join(out_dir, "P{:02d}countours-auto".format(p_id))
             if not os.path.exists(p_out_dir):
                 os.makedirs(p_out_dir)
-            # self.save_predictions(o_predictions,p_id,labels,rotated,"o",p_out_dir)
+            self.save_predictions(o_predictions,p_id,labels,rotated,"o",p_out_dir)
             self.save_predictions(i_predictions,p_id,labels,rotated,"i",p_out_dir)
+            print("===============")
 
         
         return o_predictions, i_predictions
@@ -53,9 +54,9 @@ class Predictor(object):
         o_predictions = []
         i_predictions = []
         for image in images:
-            # o_mask_pred = self.o_model.predict(image[None,:,:,:])
+            o_mask_pred = self.o_model.predict(image[None,:,:,:])
             i_mask_pred = self.i_model.predict(image[None,:,:,:])
-            # o_predictions.append((image[:,:,0],o_mask_pred))
+            o_predictions.append((image[:,:,0],o_mask_pred))
             i_predictions.append((image[:,:,0],i_mask_pred))
         return o_predictions,i_predictions
 
@@ -91,11 +92,11 @@ class Predictor(object):
         mask_image = np.where(mask>0.5,255,0).astype('uint8')
         im2, coords, hierarchy = cv2.findContours(mask_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
         if not coords:
-            # print("No contour detected.")
+            print("-- No contour detected.")
             coords = np.ones((1, 1, 1, 2), dtype='int')
 
         if len(coords) > 1:
-            # print("Multiple contours detected.")
+            print("-- Multiple contours detected.")
             lengths = [len(coord) for coord in coords]
             coords = [coords[np.argmax(lengths)]]
             

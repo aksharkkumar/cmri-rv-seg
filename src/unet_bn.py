@@ -32,12 +32,12 @@ class UNet(object):
         # downsampling block
         for i in range(steps):
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
+            layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
             layer = Dropout(dropout)(layer)
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
+            layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
             layer = Dropout(dropout)(layer)
 
@@ -45,17 +45,16 @@ class UNet(object):
             layer = MaxPooling2D(pool_size=(2, 2))(layer)
             
             features *= 2
-            
+        
         layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-        #layer = BatchNormalization()(layer)
+        layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
         layer = Dropout(dropout)(layer)
         
         layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-        #layer = BatchNormalization()(layer)
+        layer = BatchNormalization()(layer)
         layer = Activation('relu')(layer)
         layer = Dropout(dropout)(layer)
-        
         
         # upsampling block
         for i in reversed(range(steps)):
@@ -65,12 +64,12 @@ class UNet(object):
             layer = Concatenate()( [layer, crop_copy] )
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
+            layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
             layer = Dropout(dropout)(layer)
 
             layer = Conv2D(filters=features,kernel_size=3,padding=padding)(layer)
-            #layer = BatchNormalization()(layer)
+            layer = BatchNormalization()(layer)
             layer = Activation('relu')(layer)
             layer = Dropout(dropout)(layer)
 
